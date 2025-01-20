@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registro de Usuario</h2>
+    <form id="registerForm">
+        <input type="email" id="email" class="input-field" placeholder="Correo electrónico" required />
+        <input type="password" id="password" class="input-field" placeholder="Contraseña" required />
+        <button type="submit" class="button">Registrarse</button>
+    </form>
+    <div id="errorMessage" style="color: red; display: none;"></div>
+
+    <!-- Importar Firebase v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        // Configuración de Firebase (asegúrate de sustituir estos valores por los de tu propio proyecto)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6C2LkO7FO6Yu8lNA-OXjUtUNlGu-r2vM",
+            authDomain: "fitbit-testing-d059c.firebaseapp.com",
+            projectId: "fitbit-testing-d059c",
+            storageBucket: "fitbit-testing-d059c.firebasestorage.app",
+            messagingSenderId: "665967134190",
+            appId: "1:665967134190:web:151c139ea11addb25e3aff",
+            measurementId: "G-3ER5VRM8GG"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Manejar el registro del formulario
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                // Crear el usuario con email y contraseña
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+
+                // Acceder al usuario creado
+                const user = userCredential.user;
+                console.log("Usuario registrado:", user);
+
+                // Guardar información adicional en la base de datos Firestore
+                await db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    createdAt: new Date()
+                });
+
+                alert("Usuario registrado exitosamente");
+                window.location.href = "/login.html"; // Redirigir a la página de login, si la tienes
+            } catch (error) {
+                console.error(error.message);
+                document.getElementById("errorMessage").innerText = error.message;
+                document.getElementById("errorMessage").style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión con Fitbit</title>
+</head>
+<body>
+    <h1>Inicia sesión con tu cuenta de Fitbit</h1>
+    
+    <!-- Este formulario redirige al usuario a la página de autenticación de Fitbit -->
+    <form action="{{ url_for('fitbitoauth') }}" method="GET">
+        <button type="submit">Iniciar sesión con Fitbit</button>
+    </form>
+
+</body>
+</html>

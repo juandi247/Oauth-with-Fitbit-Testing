@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+      <!-- Importar Firebase v8 -->
+      <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+    <h2>Iniciar sesión</h2>
+    <form id="loginForm" method="POST" action="/">
+        <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" name="password" placeholder="Contraseña" required>
+        <input type="hidden" id="idToken" name="idToken">
+        <button type="submit">Iniciar sesión</button>
+    </form>
+
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6C2LkO7FO6Yu8lNA-OXjUtUNlGu-r2vM",
+            authDomain: "fitbit-testing-d059c.firebaseapp.com",
+            projectId: "fitbit-testing-d059c",
+            storageBucket: "fitbit-testing-d059c.firebasestorage.app",
+            messagingSenderId: "665967134190",
+            appId: "1:665967134190:web:151c139ea11addb25e3aff",
+            measurementId: "G-3ER5VRM8GG"
+        };
+        
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Manejar el inicio de sesión
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    user.getIdToken().then(function(idToken) {
+                        // Colocar el idToken en el formulario antes de enviarlo
+                        document.getElementById("idToken").value = idToken;
+                        document.getElementById("loginForm").submit();
+                    });
+                })
+                .catch((error) => {
+                    console.error(error.message);
+                });
+        });
+    </script>
+</body>
+</html>
